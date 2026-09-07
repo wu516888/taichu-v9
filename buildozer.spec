@@ -70,3 +70,6 @@ build_dir = .buildozer
 
 # (str) 二进制输出目录
 bin_dir = bin
+
+# (str) 锁定 python-for-android 到 Kivy 2.3.0 时代的配套版本
+p4a.branch = v2024.01.21
