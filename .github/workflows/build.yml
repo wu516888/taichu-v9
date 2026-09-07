@@ -6,26 +6,30 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu‑latest
     steps:
-      - name: Checkout code
+      - name: Checkout source
         uses: actions/checkout@v4
 
-      - name: Build with Buildozer
-        uses: ArtemSBulgakov/buildozer-action@v1
-        id: buildozer
+      - name: Install system dependencies
+        run: |
+          sudo apt‑get update
+          sudo apt‑get install‑y git zip unzip openjdk‑17‑jdk‑headless autoconf libtool pkg‑config zlib1g‑dev libncurses5‑dev libncursesw5‑dev libssl‑dev libffi‑dev libsqlite3‑dev
+
+      - name: Setup Python
+        uses: actions/setup‑python@v5
         with:
-          command: buildozer android debug
-          buildozer_version: stable
+          python‑version: "3.11"
+
+      - name: Install buildozer
+        run: pip install buildozer
+
+      - name: Build debug APK
+        run: buildozer android debug
 
       - name: Upload APK artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload‑artifact@v4
         with:
-          name: taichu-v9-apk
-          path: ${{ steps.buildozer.outputs.apk }}
-          retention-days: 30
-
-      - name: Print build result
-        run: |
-          echo "APK built successfully!"
-          echo "File: ${{ steps.buildozer.outputs.apk }}"
+          name: taichu‑v9‑apk
+          path: ./bin/*.apk
+          retention‑days: 30
