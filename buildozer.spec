@@ -19,7 +19,7 @@ source.include_exts = py,png,jpg,kv,atlas,json
 source.exclude_dirs = tests, bin, .git
 
 # (list) 应用依赖的 Python 包（requests 用于云端 API）
-requirements = python3==3.11.16,kivy==2.3.0,flask==3.0.0,requests
+requirements = hostpython3==3.11.16,python3==3.11.16,kivy==2.3.0,flask==3.0.0,requests
 
 # (str) 应用版本
 version = 1.0.0
