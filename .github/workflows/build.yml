@@ -27,6 +27,8 @@ jobs:
           pip install buildozer cython==0.29.36
       - name: Install Android SDK tools and accept licenses
         run: |
+          export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+          export PATH=$JAVA_HOME/bin:$PATH
           SDK=$HOME/.buildozer/android/platform/android-sdk
           mkdir -p $SDK
           cd $SDK
@@ -36,7 +38,8 @@ jobs:
           mkdir -p tools
           cp -r cmdline-tools/bin tools/bin
           cp -r cmdline-tools/lib tools/lib
-          yes | $SDK/tools/bin/sdkmanager --sdk_root=$SDK --licenses > /dev/null
+          java -version
+          yes | $SDK/tools/bin/sdkmanager --sdk_root=$SDK --licenses
       - name: Set JAVA_HOME
         run: echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
       - name: Build debug APK
