@@ -1,8 +1,7 @@
 name: Build Android APK
-
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -23,10 +22,10 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: taichu-v9-apk
-          path: ${{ steps.buildozer.outputs.filename }}
+          path: ${{ steps.buildozer.outputs.apk }}
           retention-days: 30
 
       - name: Print build result
         run: |
           echo "APK built successfully!"
-          echo "File: ${{ steps.buildozer.outputs.filename
+          echo "File: ${{ steps.buildozer.outputs.apk }}"
