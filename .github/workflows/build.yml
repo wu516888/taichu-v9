@@ -26,23 +26,6 @@ jobs:
         run: |
           pip install --upgrade pip
           pip install buildozer cython==0.29.36
-      - name: Install Android SDK tools and accept licenses
-        run: |
-          export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
-          export PATH=$JAVA_HOME/bin:$PATH
-          SDK=$HOME/.buildozer/android/platform/android-sdk
-          mkdir -p $SDK
-          cd $SDK
-          wget -q https://dl.google.com/android/repository/commandlinetools-linux-12700392_latest.zip
-          unzip -q commandlinetools-linux-12700392_latest.zip
-          rm commandlinetools-linux-12700392_latest.zip
-          mkdir -p tools
-          cp -r cmdline-tools/bin tools/bin
-          cp -r cmdline-tools/lib tools/lib
-          java -version
-          yes | $SDK/tools/bin/sdkmanager --sdk_root=$SDK --licenses
-      - name: Set JAVA_HOME
-        run: echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
       - name: Clean old buildozer cache
         run: |
              buildozer android clean || true
