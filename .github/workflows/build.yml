@@ -6,7 +6,6 @@ on:
 
 jobs:
   build:
-    container: kivy/buildozer:latest
     runs-on: ubuntu-22.04
     steps:
       - name: Checkout source
@@ -16,19 +15,32 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y git zip unzip openjdk-17-jdk-headless autoconf automake autoconf-archive libtool pkg-config zlib1g-dev libncurses5-dev libncursesw5-dev libssl-dev libffi-dev libsqlite3-dev
-
       - name: Setup Python
         uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-      - name: Pin pip and install build tooling
-        run: |
-          python -m pip install --upgrade pip==23.0.1 setuptools wheel
-          pip install --upgrade buildozer python-for-android cython==0.29.36
+
       - name: Install buildozer
         run: |
           pip install --upgrade pip
           pip install buildozer cython==0.29.36
+      - name: Install Android SDK tools and accept licenses
+        run: |
+          export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+          export PATH=$JAVA_HOME/bin:$PATH
+          SDK=$HOME/.buildozer/android/platform/android-sdk
+          mkdir -p $SDK
+          cd $SDK
+          wget -q https://dl.google.com/android/repository/commandlinetools-linux-12700392_latest.zip
+          unzip -q commandlinetools-linux-12700392_latest.zip
+          rm commandlinetools-linux-12700392_latest.zip
+          mkdir -p tools
+          cp -r cmdline-tools/bin tools/bin
+          cp -r cmdline-tools/lib tools/lib
+          java -version
+          yes | $SDK/tools/bin/sdkmanager --sdk_root=$SDK --licenses
+      - name: Set JAVA_HOME
+        run: echo "JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64" >> $GITHUB_ENV
       - name: Clean old buildozer cache
         run: |
              buildozer android clean || true
@@ -42,3 +54,4 @@ jobs:
           name: taichu-v9-apk
           path: ./bin/*.apk
           retention-days: 30
+          
